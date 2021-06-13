@@ -1,0 +1,109 @@
+create table Metrica_tovara
+(
+	ID_edinici int not null
+		constraint XPKMetrica_tovara
+			primary key,
+	Edinica_izmereniya varchar(20)
+)
+go
+
+create table Poluchateli
+(
+	ID_poluchatelya int not null
+		constraint XPKPoluchateli
+			primary key,
+	Poluchatel varchar(20),
+	Adress varchar(20),
+	Telephone varchar(20)
+)
+go
+
+create table Postavshik
+(
+	ID_postavshika int not null
+		constraint XPKPostavshik
+			primary key,
+	Postavshik varchar(20),
+	Adress varchar(20),
+	Telephone varchar(20)
+)
+go
+
+create table Sotrudnik_sklada
+(
+	ID_sotrudnika char(18) not null
+		constraint XPKSotrudnik_sklada
+			primary key,
+	PHIO_sotrudnika varchar(20),
+	Data_rozdeniya date,
+	Dolznost varchar(20),
+	Adress varchar(20),
+	Telephone varchar(20)
+)
+go
+
+create table Tovar_group
+(
+	ID_tovarnoi_group int not null
+		constraint XPKTovar_group
+			primary key,
+	Tovarnaya_group varchar(20)
+)
+go
+
+create table Tovar
+(
+	ID_tovara int not null
+		constraint XPKTovar
+			primary key,
+	Name varchar(20),
+	Proizvoditel varchar(20),
+	Strana_proizvoditelya varchar(20),
+	ID_tovarnoi_group int not null
+		constraint R_20
+			references Tovar_group,
+	ID_edinici int not null
+		constraint R_21
+			references Metrica_tovara,
+	Colvo_tovara int
+)
+go
+
+create table Prihod_tovara
+(
+	ID_nakladnoi int not null,
+	Data_prihoda_tovara date,
+	ID_postavshika int not null
+		constraint R_9
+			references Postavshik,
+	ID_sotrudnika char(18) not null
+		constraint R_17
+			references Sotrudnik_sklada,
+	Colvo int,
+	ID_tovara int not null
+		constraint R_23
+			references Tovar,
+	constraint XPKPrihod_tovara
+		primary key (ID_nakladnoi, ID_postavshika, ID_sotrudnika)
+)
+go
+
+create table Rashod_tovara
+(
+	ID_nakladnoi int not null,
+	Data_rashoda_tovara date,
+	ID_poluchatelya int not null
+		constraint R_10
+			references Poluchateli,
+	ID_sotrudnika char(18) not null
+		constraint R_16
+			references Sotrudnik_sklada,
+	ID_tovara int
+		constraint R_22
+			references Tovar,
+	Colvo int,
+	constraint XPKRashod_tovara
+		primary key (ID_nakladnoi, ID_poluchatelya, ID_sotrudnika)
+)
+go
+
